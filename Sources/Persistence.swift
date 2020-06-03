@@ -18,14 +18,12 @@ extension ToDoListViewController {
         }
     }
 
-    func load() -> [Section : [ToDo]] {
+    func load() {
         do {
             let data = try Data(contentsOf: url)
-            let result = try JSONDecoder().decode([Section : [ToDo]].self, from: data)
-            return result
+            todosBySection = try JSONDecoder().decode([ToDo.Status : [ToDo]].self, from: data)
         } catch {
             NSLog("Error saving: \(error)")
-            return [:]
         }
     }
 

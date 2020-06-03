@@ -8,7 +8,13 @@
 
 import Foundation
 
+
 struct ToDo: Hashable, Codable {
+
+    enum Status: Int, CaseIterable, Codable {
+        case incomplete, complete
+    }
+
     var text: String
     let uuid = UUID()
 
