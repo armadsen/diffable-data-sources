@@ -6,7 +6,6 @@
 //  Copyright © 2020 Open Reel Software. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 extension ToDoListViewController {
