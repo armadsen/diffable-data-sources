@@ -12,6 +12,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        registerForBackgroundingNotification()
         navigationItem.leftBarButtonItem = editButtonItem
         load()
     }
@@ -100,11 +101,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
 
     // MARK: - Properties
 
-    var todosBySection = [ToDo.Status : [ToDo]]() {
-        didSet {
-            save()
-        }
-    }
+    var todosBySection = [ToDo.Status : [ToDo]]()
 
     @IBOutlet weak var tableView: UITableView!
 }

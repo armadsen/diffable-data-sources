@@ -9,6 +9,16 @@
 import Foundation
 
 extension ToDoListViewController {
+
+    func registerForBackgroundingNotification() {
+        let nc = NotificationCenter.default
+        nc.addObserver(self, selector: #selector(willResignActive(_:)), name: UIApplication.willResignActiveNotification, object: nil)
+    }
+
+    @objc func willResignActive(_ notification: Notification) {
+        save()
+    }
+
     func save() {
         do {
             let data = try JSONEncoder().encode(todosBySection)
