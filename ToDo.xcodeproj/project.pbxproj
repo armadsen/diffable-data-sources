@@ -15,6 +15,7 @@
 		9D6AB4E12487034A00A33F69 /* ToDo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6AB4E02487034A00A33F69 /* ToDo.swift */; };
 		9D6AB4E32487074600A33F69 /* ToDoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6AB4E22487074600A33F69 /* ToDoTableViewCell.swift */; };
 		9D6AB4E52487167500A33F69 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6AB4E42487167500A33F69 /* Persistence.swift */; };
+		9D6AB4E92487228D00A33F69 /* ToDoDiffableDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D6AB4E82487228D00A33F69 /* ToDoDiffableDataSource.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		9D6AB4E02487034A00A33F69 /* ToDo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDo.swift; sourceTree = "<group>"; };
 		9D6AB4E22487074600A33F69 /* ToDoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoTableViewCell.swift; sourceTree = "<group>"; };
 		9D6AB4E42487167500A33F69 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
+		9D6AB4E82487228D00A33F69 /* ToDoDiffableDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoDiffableDataSource.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				9D6AB4E02487034A00A33F69 /* ToDo.swift */,
 				9D6AB4E22487074600A33F69 /* ToDoTableViewCell.swift */,
 				9D6AB4E42487167500A33F69 /* Persistence.swift */,
+				9D6AB4E82487228D00A33F69 /* ToDoDiffableDataSource.swift */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -163,6 +166,7 @@
 				9D6AB4E12487034A00A33F69 /* ToDo.swift in Sources */,
 				9D6AB4DF2486FFD900A33F69 /* ToDoListViewController.swift in Sources */,
 				9D6AB4C92486FF9000A33F69 /* AppDelegate.swift in Sources */,
+				9D6AB4E92487228D00A33F69 /* ToDoDiffableDataSource.swift in Sources */,
 				9D6AB4E32487074600A33F69 /* ToDoTableViewCell.swift in Sources */,
 				9D6AB4E52487167500A33F69 /* Persistence.swift in Sources */,
 			);

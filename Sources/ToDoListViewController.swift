@@ -15,7 +15,7 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, ToDoTableVi
         registerForBackgroundingNotification()
         navigationItem.leftBarButtonItem = editButtonItem
 
-        dataSource = UITableViewDiffableDataSource(tableView: tableView, cellProvider: { (tableView, indexPath, todo) -> UITableViewCell? in
+        dataSource = ToDoDiffableDataSource(tableView: tableView, cellProvider: { (tableView, indexPath, todo) -> UITableViewCell? in
             let cell = tableView.dequeueReusableCell(withIdentifier: ToDoTableViewCell.identifier, for: indexPath) as! ToDoTableViewCell
 
             cell.label.text = todo.text
@@ -86,5 +86,5 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, ToDoTableVi
     var todosBySection = [ToDo.Status : [ToDo]]()
 
     @IBOutlet weak var tableView: UITableView!
-    var dataSource: UITableViewDiffableDataSource<ToDo.Status, ToDo>!
+    var dataSource: ToDoDiffableDataSource!
 }
