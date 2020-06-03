@@ -14,9 +14,15 @@ struct ToDo: Hashable, Codable {
     enum Status: Int, CaseIterable, Codable {
         case incomplete, complete
     }
-
+    
     var text: String
+    var status: Status
     let uuid = UUID()
+
+    init(text: String, status: Status = .incomplete) {
+        self.text = text
+        self.status = status
+    }
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(uuid)

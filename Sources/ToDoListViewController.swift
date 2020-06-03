@@ -8,12 +8,22 @@
 
 import UIKit
 
-class ToDoListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, ToDoTableViewCellDelegate {
+class ToDoListViewController: UIViewController, UITableViewDelegate, ToDoTableViewCellDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         registerForBackgroundingNotification()
         navigationItem.leftBarButtonItem = editButtonItem
+
+        dataSource = UITableViewDiffableDataSource(tableView: tableView, cellProvider: { (tableView, indexPath, todo) -> UITableViewCell? in
+            let cell = tableView.dequeueReusableCell(withIdentifier: ToDoTableViewCell.identifier, for: indexPath) as! ToDoTableViewCell
+
+            cell.label.text = todo.text
+            cell.statusSwitch.isOn = todo.status == .complete
+            cell.delegate = self
+
+            return cell
+        })
         load()
     }
 
@@ -26,11 +36,9 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         alertController.addAction(UIAlertAction(title: "Create", style: .default, handler: { [weak self] _ in
             guard let self = self, let text = alertController.textFields?.first?.text else { return }
             let todo = ToDo(text: text)
-
-            let section = ToDo.Status.incomplete
-            let row = self.todosBySection[section]?.count ?? 0
-            self.todosBySection[section, default: []].append(todo)
-            self.tableView.insertRows(at: [IndexPath(row: row, section: section.rawValue)], with: .automatic)
+            var snapshot = self.dataSource.snapshot()
+            snapshot.appendItems([todo], toSection: .incomplete)
+            self.dataSource.apply(snapshot)
         }))
 
         present(alertController, animated: true, completion: nil)
@@ -39,16 +47,18 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     // MARK: - ToDoTableViewCellDelegate
 
     func statusSwitchWasTappedIn(cell: ToDoTableViewCell) {
-        guard let indexPath = tableView.indexPath(for: cell) else { return }
-        guard let section = ToDo.Status(rawValue: indexPath.section) else { return }
-        guard let todo = todosBySection[section]?[indexPath.row] else { return }
 
-        let newSection: ToDo.Status = section == .complete ? .incomplete : .complete
-        let newIndexPath = IndexPath(row: todosBySection[newSection]?.count ?? 0, section: newSection.rawValue)
-        todosBySection[section]?.remove(at: indexPath.row)
-        todosBySection[newSection]?.append(todo)
-        tableView.deleteRows(at: [indexPath], with: .automatic)
-        tableView.insertRows(at: [newIndexPath], with: .automatic)
+        guard let indexPath = tableView.indexPath(for: cell),
+            var todo = dataSource.itemIdentifier(for: indexPath) else {
+            return
+        }
+
+        let newStatus: ToDo.Status = todo.status == .complete ? .incomplete : .complete
+        var snapshot = dataSource.snapshot()
+        snapshot.deleteItems([todo])
+        todo.status = newStatus
+        snapshot.appendItems([todo], toSection: newStatus)
+        dataSource.apply(snapshot)
     }
 
     // MARK: - Overrides
@@ -58,42 +68,14 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
         tableView.setEditing(editing, animated: animated)
     }
 
-    // MARK: - Table View Data Source
-
-    func numberOfSections(in tableView: UITableView) -> Int { ToDo.Status.allCases.count }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection sectionIndex: Int) -> Int {
-        let section = ToDo.Status(rawValue: sectionIndex) ?? .incomplete
-        return todosBySection[section]?.count ?? 0
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: ToDoTableViewCell.identifier, for: indexPath) as! ToDoTableViewCell
-
-        let section = ToDo.Status(rawValue: indexPath.section)!
-        cell.label.text = todosBySection[section]![indexPath.row].text
-        cell.statusSwitch.isOn = section == .complete
-        cell.delegate = self
-
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, titleForHeaderInSection sectionIndex: Int) -> String? {
-        let section = ToDo.Status(rawValue: sectionIndex)!
-        switch section {
-        case .complete:
-            return "Complete"
-        case .incomplete:
-            return "Incomplete"
-        }
-    }
-
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+
         switch editingStyle {
         case .delete:
-            let section = ToDo.Status(rawValue: indexPath.section)!
-            todosBySection[section]?.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
+            guard let todo = dataSource.itemIdentifier(for: indexPath) else { return }
+            var snapshot = dataSource.snapshot()
+            snapshot.deleteItems([todo])
+            dataSource.apply(snapshot)
         default:
             break
         }
@@ -104,4 +86,5 @@ class ToDoListViewController: UIViewController, UITableViewDelegate, UITableView
     var todosBySection = [ToDo.Status : [ToDo]]()
 
     @IBOutlet weak var tableView: UITableView!
+    var dataSource: UITableViewDiffableDataSource<ToDo.Status, ToDo>!
 }
